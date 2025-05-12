@@ -97,3 +97,32 @@ def test_mod_three_many_zeros():
 def test_mod_three_many_ones():
     fsm = ModThreeMachine()
     assert fsm.calculate("1" * 1000) == int("1" * 1000, 2) % 3
+
+# Test input with spaces only (edge case)
+def test_mod_three_spaces_only():
+    fsm = ModThreeMachine()
+    with pytest.raises(ValueError) as excinfo:
+        fsm.calculate("     ")
+    assert "No transition" in str(excinfo.value)
+
+# Test input with mixed valid and invalid characters
+def test_mod_three_mixed_valid_invalid():
+    fsm = ModThreeMachine()
+    with pytest.raises(ValueError) as excinfo:
+        fsm.calculate("1010a101")
+    assert "No transition" in str(excinfo.value)
+
+# Test very large invalid input
+def test_mod_three_large_invalid_input():
+    fsm = ModThreeMachine()
+    invalid_input = "1" * 1000 + "a"  # Valid binary followed by an invalid character
+    with pytest.raises(ValueError) as excinfo:
+        fsm.calculate(invalid_input)
+    assert "No transition" in str(excinfo.value)
+
+# Test input with special characters
+def test_mod_three_special_characters():
+    fsm = ModThreeMachine()
+    with pytest.raises(ValueError) as excinfo:
+        fsm.calculate("1010!@#")
+    assert "No transition" in str(excinfo.value)
